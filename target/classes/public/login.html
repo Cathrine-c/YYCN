@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+
+<div id="app">
+    <h2>用户登录</h2>
+    <input type="text" v-model="username">
+    <br><br>
+
+    <input type="text" v-model="password">
+    <br>
+
+    <div v-if="message" style="color: red"> {{message}}</div>
+    <br>
+    <button @click="">登录</button>
+
+</div>
+
+    <script type="application/x-javascript" src="vue.js"></script>
+    <script type="application/x-javascript" src="axios.js"></script>
+
+<script>
+
+    let app = new Vue({
+
+        el:"#app",
+        data:{
+            username: '',
+            password: '',
+            message:'',
+
+        },
+        methods:{
+
+            login:function () {
+
+                axios.post(
+                    "api/user/login",
+                    {
+                        username:app.username,
+                        password:app.password,
+                    }
+                ).then(function (resp) {
+
+                    let body = resp.data;
+                    if (body.ok){
+                        window.location.href="index.html";
+
+                    }else {
+                        app.message = body.message;
+
+
+                    }
+                })
+            }
+    }
+    })
+</script>
+
+</body>
+</html>

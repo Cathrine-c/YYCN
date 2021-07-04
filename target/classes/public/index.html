@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YYCN博客</title>
+</head>
+<body>
+
+
+<div id="app">
+    <h2>YYCN首页</h2>
+    <div v-if="user.nickname">欢迎你，{{user.nickname}} <a>注销</a> <a href="personalArticle.html">个人博客管理</a> </div>
+    <div v-else> <a href="login.html">登录</a>/<a href="register.html">注册</a></div>
+
+    <ul>
+        <li v-for="article in articles">
+            <a href="javascript:void(0)" onclick="toDetail(article.id)">{{article.title}}</a>
+
+        </li>
+
+    </ul>
+
+</div>
+<script type="application/x-javascript" src="vue.js"></script>
+<script type="application/x-javascript" src="axios.js"></script>
+
+<script>
+    let app = new Vue({
+
+        el:"#app",
+        data:{
+
+            user:{},
+
+            articles:[],
+
+        },
+        methods:{
+
+            toDetail:function () {
+
+                localStorage.setItem('aid',id);
+                window.location.href= "detail.html";
+
+            }
+        },
+        //初始化方法，页面加载后就执行
+        created:function () {
+            //发送首页初始化ajax请求，获取用户登录及文章列表信息
+            axios.get("api/article/init")
+            .then(function (resp) {
+                // console.log(resp)
+                let body = resp.data;
+
+                if (body.ok){
+
+                    //如果||前的值等于空，就赋值为||后的值
+                   app.user = body.data.user||{};
+                   app.articles = body.data.articleList||[];
+
+
+                }else {
+                    alert(body.message())
+                }
+            })
+
+        }
+
+
+    })
+</script>
+</body>
+</html>
